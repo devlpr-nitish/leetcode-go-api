@@ -51,7 +51,15 @@ func main() {
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
-	e.Use(middleware.CORS())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{
+			"https://codelibra.vercel.app",
+			"http://localhost:3000",
+			"http://localhost:5173",
+		},
+		AllowMethods: []string{echo.GET, echo.POST, echo.PUT, echo.DELETE, echo.PATCH},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
+	}))
 	handlers.RegisterRoutes(e, userHandler, goalHandler, authHandler, comparisonHandler)
 
 	log.Printf("Starting server on port %s", cfg.Port)
