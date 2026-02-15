@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -21,4 +23,11 @@ func RegisterRoutes(e *echo.Echo, userHandler *UserHandler, goalHandler *GoalHan
 
 	// Comparison Routes
 	api.POST("/compare", comparisonHandler.CompareUsers)
+
+	// Health Check
+	e.GET("/health", HealthCheck)
+}
+
+func HealthCheck(c echo.Context) error {
+	return c.JSON(http.StatusOK, map[string]string{"status": "ok"})
 }
